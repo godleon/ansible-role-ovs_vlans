@@ -26,9 +26,9 @@ script:
 
   - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} williamyeh/ansible:ubuntu16.04 "${init}" > "${container_id}"'
 
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-galaxy install -f -r /etc/ansible/roles/role_under_test/tests/requirements.yml'
+  #- 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-galaxy install -f -r /etc/ansible/roles/role_under_test/tests/requirements.yml'
 
-  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm find /etc/ansible/roles/'
+  #- 'docker exec --tty "$(cat ${container_id})" env TERM=xterm find /etc/ansible/roles/'
 
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -i /etc/ansible/roles/role_under_test/tests/inventory --syntax-check'
 
