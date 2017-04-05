@@ -1,2 +1,38 @@
 ---
 # tasks file for ansible-role-ovs_vlans
+
+# Configure the networking environment depends on the distribution
+- include: '{{ ansible_distribution | lower }}.yml'
+
+
+- name: Create a OVS bridge named {{ ovs_vlans_OvsBridgeName }}
+  openvswitch_bridge:
+    bridge: '{{ ovs_vlans_OvsBridgeName }}'
+    state: present
+  when: ansible_virtualization_type != 'docker'
+
+- name: Creates port {{ ovs_vlans_OvsBridgePortInterfaceName }} on bridge {{ ovs_vlans_OvsBridgeName }}
+  openvswitch_port:
+    bridge: '{{ ovs_vlans_OvsBridgeName }}'
+    port: '{{ ovs_vlans_OvsBridgePortInterfaceName }}'
+    state: present
+  when: ansible_virtualization_type != 'docker'
+
+- name: Define KVM virtual network for OVS bridge
+  virt_net:
+    command: define
+    name: '{{ ovs_vlans_OvsBridgeName }}'
+    xml: '{{ lookup("template", "templates/virsh_net.xml.j2") }}'
+  when: ansible_virtualization_type != 'docker'
+
+- name: Active KVM virtual network
+  virt_net:
+    state: active
+    name: '{{ ovs_vlans_OvsBridgeName }}'
+  when: ansible_virtualization_type != 'docker'
+
+- name: Config KVM virtual network to autostart when boot
+  virt_net:
+    autostart: yes
+    name: '{{ ovs_vlans_OvsBridgeName }}'
+  when: ansible_virtualization_type != 'docker'

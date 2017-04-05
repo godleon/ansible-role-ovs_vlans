@@ -1,0 +1,12 @@
+- name: Install Open vSwitch
+  apt:
+    name: '{{ item }}'
+    state: 'latest'
+    update_cache: 'yes'
+  with_items:
+    - 'vlan'
+    - 'ifenslave'
+    - 'python-lxml'
+    - 'openvswitch-switch'
+  notify: restart openvswitch
+  when: ansible_virtualization_type != 'docker'

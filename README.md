@@ -32,7 +32,7 @@ ovs_vlans_TrunkVlans: [101, 102, 103, 104, 105]
 Dependencies
 ------------
 
-None
+- godeon.kvm_host
 
 
 Example Playbook
