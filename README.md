@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/godleon/ansible-role-ovs_vlans.svg?branch=master)](https://travis-ci.org/godleon/ansible-role-ovs_vlans)
+
+
 Role Name
 =========
 
