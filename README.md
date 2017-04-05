@@ -18,6 +18,8 @@ Requirements
 Role Variables
 --------------
 
+These variables shown below have to be configured before executing the Ansible role:
+
 ```yml
 # Physical network interface name which Open vSwitch binds with
 ovs_vlans_OvsBindingInterface: 'eth0'
@@ -34,6 +36,8 @@ Dependencies
 
 - godeon.kvm_host
 
+> ansible-galaxy install godleon.kvm_host
+
 
 Example Playbook
 ----------------
@@ -43,6 +47,7 @@ Including an example of how to use your role (for instance, with variables passe
 ```yml
 - hosts: servers
   roles:
+    - { role: godleon.kvm_host }
     - { role: godleon.ovs_vlans }
 ```
 
