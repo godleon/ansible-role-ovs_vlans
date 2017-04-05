@@ -28,6 +28,8 @@ script:
 
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-galaxy install -f -r /etc/ansible/roles/role_under_test/requirements.yml'
 
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ls -al /etc/ansible/roles/'
+
   - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -i /etc/ansible/roles/role_under_test/tests/inventory --syntax-check'
 
   - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --connection=local --sudo'
