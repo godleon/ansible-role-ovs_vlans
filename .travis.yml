@@ -1,0 +1,47 @@
+---
+services: docker
+
+# Use the new container infrastructure
+sudo: yes
+
+env:
+  - distro: ubuntu1604
+    init: /lib/systemd/systemd
+    run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    playbook: test.yml
+  # - distro: centos7
+  #   init: /usr/lib/systemd/systemd
+  #   run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  #   playbook: centos-7-test.yml
+
+services:
+  - docker
+
+before_install:
+  # - 'docker pull ubuntu:xenial'
+  - 'docker pull williamyeh/ansible:ubuntu16.04'
+
+script:
+
+  - container_id=$(mktemp)
+
+  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} williamyeh/ansible:ubuntu16.04 "${init}" > "${container_id}"'
+
+  - 'docker exec --tty "$(cat ${container_id})" env TERM=xterm ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml -i /etc/ansible/roles/role_under_test/tests/inventory --syntax-check'
+
+  - 'docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --connection=local --sudo'
+
+  - idempotence=$(mktemp)
+  - docker exec "$(cat ${container_id})" ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml --connection=local --sudo | tee -a ${idempotence}
+  - >
+    tail ${idempotence}
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
+
+
+notifications:
+  webhooks: 
+    - https://galaxy.ansible.com/api/v1/notifications/
+    - https://webhooks.gitter.im/e/ef62a834ccdef1e4218a
+    - https://outlook.office.com/webhook/a47aec9a-63a5-4c11-b12a-59ffcaccfa6e@438d6edb-19d9-48d4-84fe-7737135902d5/TravisCI/ffbd6e845cea4aa1bd8c9afddad9ed75/ee481e59-19dc-48d5-9d40-144b1a6cd74a
