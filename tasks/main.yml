@@ -30,7 +30,20 @@
 - name: Active specified NIC
   shell: "ifconfig {{ ovs_vlans_OvsBridgePortInterfaceName }} down && ifconfig {{ ovs_vlans_OvsBridgePortInterfaceName }} up"
   when: ansible_virtualization_type != 'docker'
+ 
+- name: Stop a network
+  virt_net:
+    command: destroy
+    name: '{{ ovs_vlans_OvsBridgeName }}'
+  ignore_errors: 'yes'
+  when: ansible_virtualization_type != 'docker'
 
+- name: Undefine a network
+  virt_net:
+    command: undefine
+    name: '{{ ovs_vlans_OvsBridgeName }}'
+  ignore_errors: 'yes'
+  when: ansible_virtualization_type != 'docker'
 
 - name: Define KVM virtual network for OVS bridge
   virt_net:
