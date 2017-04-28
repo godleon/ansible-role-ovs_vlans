@@ -12,6 +12,14 @@
     </portgroup>
 {% endfor %}
 
+    <portgroup name='single_nic_with_vlans'>
+        <vlan trunk='yes'>
+        {% for item in ovs_vlans_TrunkVlans %}
+            <tag id='{{ item }}' {% if item == ovs_vlans_NativeVlanIdInTrunk %}nativeMode='untagged'{% endif %} />
+        {% endfor %}
+        </vlan>
+    </portgroup>
+
     <portgroup name='trunk_all' default='yes'>
         <vlan trunk='yes'>
         {% for item in ovs_vlans_TrunkVlans %}

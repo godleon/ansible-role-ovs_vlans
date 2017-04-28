@@ -29,6 +29,10 @@ ovs_vlans_OvsBridgeName: 'ovsbr0'
 
 # VLANs which are supported in the OVS bridge
 ovs_vlans_TrunkVlans: [101, 102, 103, 104, 105]
+
+# Native VLAN in trunk port
+# (leave it blank if there is no any native vlan in trunk port)
+ovs_vlans_NativeVlanIdInTrunk: 102
 ```
 
 Dependencies
