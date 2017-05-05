@@ -1,28 +1,28 @@
 <network>
-    <name>{{ ovs_vlans_OvsBridgeName }}</name>
+    <name>{{ ovs_vlans.OvsBridgeName }}</name>
     <forward mode='bridge'/>
-    <bridge name='{{ ovs_vlans_OvsBridgeName }}'/>
+    <bridge name='{{ ovs_vlans.OvsBridgeName }}'/>
     <virtualport type='openvswitch'/>
 
-{% for item in ovs_vlans_TrunkVlans %}
+{% for item in ovs_vlans.TrunkVlans %}
     <portgroup name='native_{{ item }}'>
          <vlan trunk='yes'>
             <tag id='{{ item }}' nativeMode='untagged'/>
         </vlan>
     </portgroup>
-{% endfor %}
 
-    <portgroup name='single_nic_with_vlans'>
+    <portgroup name='native_{{ item }}_in_trunk'>
         <vlan trunk='yes'>
-        {% for item in ovs_vlans_TrunkVlans %}
-            <tag id='{{ item }}' {% if item == ovs_vlans_NativeVlanIdInTrunk %}nativeMode='untagged'{% endif %} />
+        {% for s in ovs_vlans.TrunkVlans %}
+            <tag id='{{ s }}' {% if item == s %}nativeMode='untagged'{% endif %} />
         {% endfor %}
         </vlan>
     </portgroup>
+{% endfor %}
 
     <portgroup name='trunk_all' default='yes'>
         <vlan trunk='yes'>
-        {% for item in ovs_vlans_TrunkVlans %}
+        {% for item in ovs_vlans.TrunkVlans %}
             <tag id='{{ item }}'/>
         {% endfor %}
         </vlan>

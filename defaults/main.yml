@@ -1,7 +1,7 @@
 ---
 # defaults file for ansible-role-ovs_vlans
 
-ovs_vlans_OvsBridgePortInterfaceName: 'eth0'
-ovs_vlans_OvsBridgeName: 'ovsbr0'
-ovs_vlans_TrunkVlans: [101, 102, 103, 104, 105]
-ovs_vlans_NativeVlanIdInTrunk: 102
+ovs_vlans:
+  OvsBridgePortInterfaceName: 'eth0'
+  OvsBridgeName: 'ovsbr0'
+  TrunkVlans: [101, 102, 103, 104, 105]

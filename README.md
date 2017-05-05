@@ -21,18 +21,16 @@ Role Variables
 These variables shown below have to be configured before executing the Ansible role:
 
 ```yml
-# Physical network interface name which Open vSwitch binds with
-ovs_vlans_OvsBindingInterface: 'eth0'
 
-# OVS bridge name
-ovs_vlans_OvsBridgeName: 'ovsbr0'
+ovs_vlans:
+  # Physical network interface name which Open vSwitch binds with
+  OvsBindingInterface: 'eth0'
 
-# VLANs which are supported in the OVS bridge
-ovs_vlans_TrunkVlans: [101, 102, 103, 104, 105]
+  # OVS bridge name
+  OvsBridgeName: 'ovsbr0'
 
-# Native VLAN in trunk port
-# (leave it blank if there is no any native vlan in trunk port)
-ovs_vlans_NativeVlanIdInTrunk: 102
+  # VLANs which are supported in the OVS bridge
+  TrunkVlans: [101, 102, 103, 104, 105]
 ```
 
 Dependencies

@@ -12,54 +12,52 @@
 - include: '{{ ansible_distribution | lower }}.yml'
 
 
-
-
-- name: Create a OVS bridge named {{ ovs_vlans_OvsBridgeName }}
+- name: Create a OVS bridge named {{ ovs_vlans.OvsBridgeName }}
   openvswitch_bridge:
-    bridge: '{{ ovs_vlans_OvsBridgeName }}'
+    bridge: '{{ ovs_vlans.OvsBridgeName }}'
     state: present
   when: ansible_virtualization_type != 'docker'
 
-- name: Creates port {{ ovs_vlans_OvsBridgePortInterfaceName }} on bridge {{ ovs_vlans_OvsBridgeName }}
+- name: Creates port {{ ovs_vlans.OvsBridgePortInterfaceName }} on bridge {{ ovs_vlans.OvsBridgeName }}
   openvswitch_port:
-    bridge: '{{ ovs_vlans_OvsBridgeName }}'
-    port: '{{ ovs_vlans_OvsBridgePortInterfaceName }}'
+    bridge: '{{ ovs_vlans.OvsBridgeName }}'
+    port: '{{ ovs_vlans.OvsBridgePortInterfaceName }}'
     state: present
   when: ansible_virtualization_type != 'docker'
 
 - name: Active specified NIC
-  shell: "ifconfig {{ ovs_vlans_OvsBridgePortInterfaceName }} down && ifconfig {{ ovs_vlans_OvsBridgePortInterfaceName }} up"
+  shell: "ifconfig {{ ovs_vlans.OvsBridgePortInterfaceName }} down && ifconfig {{ ovs_vlans.OvsBridgePortInterfaceName }} up"
   when: ansible_virtualization_type != 'docker'
  
 - name: Stop a network
   virt_net:
     command: destroy
-    name: '{{ ovs_vlans_OvsBridgeName }}'
+    name: '{{ ovs_vlans.OvsBridgeName }}'
   ignore_errors: 'yes'
   when: ansible_virtualization_type != 'docker'
 
 - name: Undefine a network
   virt_net:
     command: undefine
-    name: '{{ ovs_vlans_OvsBridgeName }}'
+    name: '{{ ovs_vlans.OvsBridgeName }}'
   ignore_errors: 'yes'
   when: ansible_virtualization_type != 'docker'
 
 - name: Define KVM virtual network for OVS bridge
   virt_net:
     command: define
-    name: '{{ ovs_vlans_OvsBridgeName }}'
+    name: '{{ ovs_vlans.OvsBridgeName }}'
     xml: '{{ lookup("template", "templates/virsh_net.xml.j2") }}'
   when: ansible_virtualization_type != 'docker'
 
 - name: Active KVM virtual network
   virt_net:
     state: active
-    name: '{{ ovs_vlans_OvsBridgeName }}'
+    name: '{{ ovs_vlans.OvsBridgeName }}'
   when: ansible_virtualization_type != 'docker'
 
 - name: Config KVM virtual network to autostart when boot
   virt_net:
     autostart: yes
-    name: '{{ ovs_vlans_OvsBridgeName }}'
+    name: '{{ ovs_vlans.OvsBridgeName }}'
   when: ansible_virtualization_type != 'docker'
