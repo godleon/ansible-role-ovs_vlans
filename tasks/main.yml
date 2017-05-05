@@ -12,13 +12,13 @@
 - include: '{{ ansible_distribution | lower }}.yml'
 
 
-- name: Create a OVS bridge named {{ ovs_vlans.OvsBridgeName }}
+- name: "Create a OVS bridge named {{ ovs_vlans.OvsBridgeName }}"
   openvswitch_bridge:
     bridge: '{{ ovs_vlans.OvsBridgeName }}'
     state: present
   when: ansible_virtualization_type != 'docker'
 
-- name: Creates port {{ ovs_vlans.OvsBridgePortInterfaceName }} on bridge {{ ovs_vlans.OvsBridgeName }}
+- name: "Creates port {{ ovs_vlans.OvsBridgePortInterfaceName }} on bridge {{ ovs_vlans.OvsBridgeName }}"
   openvswitch_port:
     bridge: '{{ ovs_vlans.OvsBridgeName }}'
     port: '{{ ovs_vlans.OvsBridgePortInterfaceName }}'
